@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Sources</title>
+    <script type="text/javascript" src="https://d3js.org/d3.v6.min.js"></script>
+    <style type="text/css">
+        .space {
+            margin-top: 50px;
+        }
+
+        .large_space {
+            margin-top: 100px;
+        }
+
+        .sidebar {
+            height: 18px;
+            width: 100%;
+            position: Fixed;
+            left: 0;
+            top: 0;
+            padding: 18px;
+            background-image: url('blue_2.jpg');
+
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        .sidebar-child {
+            width: 50;
+            Float: left;
+            padding: 15px;
+            border: 2px solid white;
+            background-color: rgb(167, 185, 201);
+        }
+
+        .sidebar div {
+            padding: 5px;
+            font-size: 24px;
+            display: block;
+        }
+
+        .body-background {
+            background-color: rgb(236, 242, 244);
+        }
+
+        .body-text {
+            padding-top: 25px;
+            padding-right: 20px;
+            padding-left: 20px;
+            font-size: 18px;
+            font-family: Tahoma;
+            word-wrap: break-word;
+        }
+
+
+        .bar {
+            fill: steelblue;
+        }
+
+        rect:hover {
+            fill: orange
+        }
+
+        rect {
+            -moz-transition: all 0.3s;
+            -o-transition: all 0.3s;
+            -webkit-transition: all 0.3s;
+            transition: all 0.3s;
+        }
+
+        #tooltip {
+            position: absolute;
+            width: 200px;
+            height: auto;
+            padding: 10px;
+            background-color: white;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            pointer-events: none;
+        }
+
+        #tooltip.hidden {
+            display: none;
+        }
+
+        #tooltip p {
+            margin: 0;
+            font-family: sans-serif;
+            font-size: 16px;
+            line-height: 20px;
+        }
+    </style>
+</head>
+
+
+<body class="body-background">
+    <div class="sidebar">
+        <div class="sidebar-child"><a href="Project_Vis_1_v5_Final"> Home </a></div>
+        <div class="sidebar-child"><a href="Project_Vis_2_v4_Final">Visual 1</a></div>
+        <div class="sidebar-child"><a href="Project_Vis_3_v3_Final.html">Visual 2</a></div>
+        <div class="sidebar-child"><a href="Project_Vis_4_v2_Final">Visual 3</a></div>
+        <div class="sidebar-child"><a href="Project_Youtube">Youtube</a></div>
+        <div class="sidebar-child"><a href="Project_Sources.html">Sources</a></div>
+    </div>
+
+
+
+    <div class="body-text">
+        <br>
+        <h2> Sources </h2>
+        <hr>
+        <br>
+        <p>
+        <p>Educational spending per pupil data for 2019 comes from <a
+                href=https://educationdata.org/public-education-spending-statistics#public-education-spending-statistics>
+                EducationData.org </a>.
+            <br><br>
+            The 2021 research associated with state happiness comes from <a
+                href=https://wallethub.com/edu/happiest-states/6959> WalletHub.com </a>. Their sources and studies are
+            also
+            mentioned there. The CSV can be downloaded <a href=State_Happiness.csv> here</a>.
+            <br><br>
+            Unemployment data for 2020 comes from the <a href=https://www.bls.gov/lau/lastrk20.html> Bureau of Labor
+                Statistics </a>.
+            <br><br>
+            Income data comes from the <a href=https://www.census.gov/library/publications/2021/demo/p60-273.html> US
+                Census Bureau </a>. Information on other metrics such as poverty can also be found there.
+            <br><br>
+            Scott Murray’s <i>Interactive Data Visualization for the Web: An Introduction to D3</i> proved to very
+            beneficial in learning D3 and ultimately creating this site. The book can be purchased <a
+                href=https://www.amazon.com/Interactive-Data-Visualization-Web-Introduction/dp/1449339735> here </a>.
+            <br><br><br><br>
+            All data besides the state happiness data can be found in a csv <a href=Agg_State.csv> here </a>
+        </p>
+
+
+
+
+    </div>
+</body>

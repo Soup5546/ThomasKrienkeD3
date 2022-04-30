@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Happiness By State Test</title>
+    <script type="text/javascript" src="https://d3js.org/d3.v6.min.js"></script>
+    <style type="text/css">
+        .space {
+            margin-top: 50px;
+        }
+
+        .large_space {
+            margin-top: 100px;
+        }
+
+        .sidebar {
+            height: 18px;
+            width: 100%;
+            position: Fixed;
+            left: 0;
+            top: 0;
+            padding: 18px;
+            background-image: url('blue_2.jpg');
+
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        .sidebar-child {
+            width: 50;
+            Float: left;
+            padding: 15px;
+            border: 2px solid white;
+            background-color: rgb(167, 185, 201);
+        }
+
+        .sidebar div {
+            padding: 5px;
+            font-size: 24px;
+            display: block;
+        }
+
+        .body-background {
+            background-color: rgb(236, 242, 244);
+        }
+
+        .body-text {
+            padding-top: 25px;
+            padding-right: 20px;
+            padding-left: 20px;
+            font-size: 18px;
+            font-family: Tahoma;
+            word-wrap: break-word;
+        }
+
+
+        rect {
+            -moz-transition: all 0.3s;
+            -o-transition: all 0.3s;
+            -webkit-transition: all 0.3s;
+            transition: all 0.3s;
+        }
+
+        rect:hover {
+            fill: orange
+        }
+
+        .bar {
+            fill: steelblue;
+        }
+
+        #tooltip {
+            position: absolute;
+            width: 200px;
+            height: auto;
+            padding: 10px;
+            background-color: white;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            pointer-events: none;
+        }
+
+        #tooltip.hidden {
+            display: none;
+        }
+
+        #tooltip p {
+            margin: 0;
+            font-family: sans-serif;
+            font-size: 16px;
+            line-height: 20px;
+        }
+    </style>
+</head>
+
+
+<body class="body-background">
+    <div class="sidebar">
+        <div class="sidebar-child"><a href="Project_Vis_1_v5_Final"> Home </a></div>
+        <div class="sidebar-child"><a href="Project_Vis_2_v4_Final">Visual 1</a></div>
+        <div class="sidebar-child"><a href="Project_Vis_3_v3_Final.html">Visual 2</a></div>
+        <div class="sidebar-child"><a href="Project_Vis_4_v2_Final">Visual 3</a></div>
+        <div class="sidebar-child"><a href="Project_Youtube">Youtube</a></div>
+        <div class="sidebar-child"><a href="Project_Sources.html">Sources</a></div>
+    </div>
+
+
+
+    <div class="body-text">
+        <br>
+        <h2> Happiness By State </h2>
+        <hr>
+        <br>
+        <p>
+            &nbsp There are many different methods to judge one’s success and over all well-being in life; however,
+            there is one indicator that is often overlooked. A person's overall happiness and satisfaction is often not
+            shown in demographic data sets, likely as there is no subjective approach to quantify this. This is a shame
+            as other metrics of success do not mean much to a person if they are not happy in life, making satisfaction
+            a crucial key in overall success.
+            <br>
+            <br>
+            &nbsp In 2021, researchers affiliated with <a href=https://wallethub.com/edu/happiest-states/6959>
+                WalletHub.com </a>, came up with a to quantify happiness in the United States and then rank states based
+            on their scores. Through using several data sets from 2010-2014, WalletHub gave weights to 31 metrics within
+            the categories of: Emotional & Physical Well-Being, Work Environment, and Community & Environment. Through
+            these the researchers aggregated points to find a singular, for a lack of a better term, Satisfaction-Score.
+            <br>
+            <br>
+            &nbsp Ranking these scores reveal some surprising results, relative to the initial educational spending
+            dataset. The top education spenders, the northeastern states in and near New England, did not find
+            themselves at the top of the list; rather ranked near the middle. More surprising is that Utah ranked
+            highest in terms of satisfaction. This is a stark contrast to their ranking with educational spending,
+            further indicating that higher education spending does not equate to a happy populace. Take a look at the
+            top ten scores below.
+        </p>
+        <hr>
+
+    </div>
+
+    <div>
+        <br>
+        <h3>&nbsp Ten "Happiest" US States</h3>
+        <ol>
+            <li>Utah</li>
+            <li>Minnesota</li>
+            <li>Hawaii</li>
+            <li>California</li>
+            <li>North Dakota</li>
+            <li>South Dakota</li>
+            <li>Idaho</li>
+            <li>Maryland</li>
+            <li>New Jersey</li>
+            <li>Massachusetts</li>
+        </ol>
+        <br>
+    </div>
+
+
+    <div id="graph"></div>
+
+
+
+    <script type="text/javascript">
+
+        // set the dimensions and margins of the graph
+        var margin = { top: 20, right: 20, bottom: 30, left: 40 },
+            width = 1000 - margin.left - margin.right,
+            height = 600 - margin.top - margin.bottom;
+
+        // append the svg object to the body of the page
+        const svg = d3.select("#graph")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform",
+                `translate(${margin.left}, ${margin.top})`);
+
+        // set the ranges
+        var x = d3.scaleBand()
+            .range([0, width])
+            .padding(0.2);
+        var y = d3.scaleLinear()
+            .range([height, 0]);
+
+        // get the data
+        d3.csv("State_Happiness.csv").then(function (data) {
+
+            // format the data
+            data.forEach(function (d) {
+                d.score = +d.score;
+            });
+
+            // Scale the range of the data in the domains
+            x.domain(data.map(function (d) { return d.state; }));
+            y.domain([0, d3.max(data, function (d) { return d.score; })]);
+
+            // Tool tip formatting
+            const tooltip = d3.select("#graph")
+                .append("div")
+                .style("opacity", 0)
+                .attr("class", "tooltip")
+                .style("background-color", "rgb(240,240,240)")
+                .style("border", "solid")
+                .style("border-width", "1px")
+                .style("border-radius", "5px")
+                .style("padding", "10px")
+
+            //hover function
+            const mouseover = function (event, d) {
+                tooltip
+                    .style("opacity", 1)
+            }
+
+            const mousemove = function (event, d) {
+                tooltip
+                    .html(`The state of ${d.state} held a score of: ${d.score}`)
+                    .style("left", (event.x) / 2 + "px")
+                    .style("top", (event.y) / 2 + "px")
+                    .style("font-family", "Tahoma")
+            }
+
+            const mouseleave = function (event, d) {
+                tooltip
+                    .style("opacity", 0)
+                    .transition()
+                    .duration()
+            }
+
+            // append the rectangles for the bar chart
+            svg.selectAll(".bar")
+                .data(data)
+                .enter()
+                .append("rect")
+                .attr("class", "bar")
+                .attr("x", function (d) { return x(d.state); })
+                .attr("width", x.bandwidth())
+                .attr("y", function (d) { return y(d.score); })
+                .attr("height", function (d) { return height - y(d.score); })
+                .on("mouseover", mouseover)
+                .on("mousemove", mousemove)
+                .on("mouseleave", mouseleave)
+
+            //Create labels
+            svg.selectAll("text")
+                .data(data)
+                .enter()
+                .append("text")
+                .text(function (d) {
+                    return d.state;
+                })
+                .attr("text-anchor", "right")
+                .attr("x", function (d) { return x(d.state) - x(d.state) - 540; })
+                .attr("y", function (d) { return x(d.state) + 12 })
+                .attr("font-family", "tahoma")
+                .attr("font-size", "11px")
+                .attr("fill", "black")
+                .attr("transform", "rotate(270)");
+
+            // add the y Axis
+            svg.append("g")
+                .call(d3.axisLeft(y));
+            
+
+            // Add Y Axis Label
+            svg.append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 0 - margin.left)
+                    .attr("x", 0 - (height / 2))
+                    .attr("dy", "1em")
+                    .style("text-anchor", "middle")
+                    .style("font-size", "11px")
+                    .text("Happiness Score");
+        });
+
+
+
+    </script>
+</body>

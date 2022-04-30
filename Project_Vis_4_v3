@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Circle plot</title>
+    <script type="text/javascript" src="https://d3js.org/d3.v6.min.js"></script>
+    <style type="text/css">
+        .space {
+            margin-top: 50px;
+        }
+
+        .large_space {
+            margin-top: 100px;
+        }
+
+        .sidebar {
+            height: 18px;
+            width: 100%;
+            position: Fixed;
+            left: 0;
+            top: 0;
+            padding: 18px;
+            background-image: url('blue_2.jpg');
+
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        .sidebar-child {
+            width: 50;
+            Float: left;
+            padding: 15px;
+            border: 2px solid white;
+            background-color: rgb(167, 185, 201);
+        }
+
+        .sidebar div {
+            padding: 5px;
+            font-size: 24px;
+            display: block;
+        }
+
+        .body-background {
+            background-color: rgb(236, 242, 244);
+        }
+
+        .body-text {
+            padding-top: 25px;
+            padding-right: 20px;
+            padding-left: 20px;
+            font-size: 18px;
+            font-family: Tahoma;
+            word-wrap: break-word;
+        }
+
+
+        .bar {
+            fill: steelblue;
+        }
+
+        rect:hover {
+            fill: orange
+        }
+
+        rect {
+            -moz-transition: all 0.3s;
+            -o-transition: all 0.3s;
+            -webkit-transition: all 0.3s;
+            transition: all 0.3s;
+        }
+
+        #tooltip {
+            position: absolute;
+            width: 200px;
+            height: auto;
+            padding: 10px;
+            background-color: white;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            pointer-events: none;
+        }
+
+        #tooltip.hidden {
+            display: none;
+        }
+
+        #tooltip p {
+            margin: 0;
+            font-family: sans-serif;
+            font-size: 16px;
+            line-height: 20px;
+        }
+    </style>
+</head>
+
+
+<body class="body-background">
+    <div class="sidebar">
+        <div class="sidebar-child"><a href="Project_Vis_1_v5_Final"> Home </a></div>
+        <div class="sidebar-child"><a href="Project_Vis_2_v4_Final">Visual 1</a></div>
+        <div class="sidebar-child"><a href="Project_Vis_3_v3_Final.html">Visual 2</a></div>
+        <div class="sidebar-child"><a href="Project_Vis_4_v2_Final">Visual 3</a></div>
+        <div class="sidebar-child"><a href="Project_Youtube">Youtube</a></div>
+        <div class="sidebar-child"><a href="Project_Sources.html">Sources</a></div>
+    </div>
+
+
+
+    <div class="body-text">
+        <br>
+        <h2> Average Income </h2>
+        <hr>
+        <br>
+        <p>
+            &nbsp Comparing educational spending to unemployment yielded fascinating results but also brought up the
+            notion that the same states that spend more on education are those that house industries where college
+            degrees are required. Typically, these careers pay higher salaries than professions that do not require some
+            sort of higher education or training. When comparing income and educational spending we expect to see some
+            sort of positive trend.
+            <br><br>
+            &nbsp When viewing the graph we see that this belief is reinforced by the data. A trend line can be formed
+            correlating with spending and income. Highest wages are paid in states such as: Maryland, Massachusetts, New
+            Jersey, Hawaii, and California. These states rank 12th, 4th, 3rd, 11th, and 18th respectively. Additionally,
+            the states with lowest wages, Mississippi, West Virginia, Arkansas, Louisiana, and Alabama rank within
+            spending at 45th, 28th, 35th, and 26th respectively.
+            <br><br>
+            &nbsp It is interesting to see the difference that education spending sees in terms to income and
+            unemployment. There are numerous potential explanations for these trends including cost of living, increased
+            tax funds with higher income, and of course higher education has a connotation with better jobs.
+            <br>
+        </p>
+        <hr>
+
+    </div>
+
+    <div class="large_space"></div>
+
+
+    <div id="graph"></div>
+
+
+    <div class="body-text">
+        <script type="text/javascript">
+
+            // set the dimensions and margins of the graph
+            var margin = { top: 20, right: 30, bottom: 30, left: 60 },
+                width = 600 - margin.left - margin.right,
+                height = 450 - margin.top - margin.bottom;
+
+            // append the svg object to the body of the page
+            const svg = d3.select("#graph")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform",
+                    `translate(${margin.left}, ${margin.top})`);
+
+
+            //Number formatting for dollar values
+            var formatAsThousands = d3.format("$,");  //e.g. converts 123456 to "123,456"
+
+            // get the data
+            d3.csv("Agg_State.csv").then(function (data) {
+
+                // Add X axis
+                const x = d3.scaleLinear()
+                    .domain([0, 120000])
+                    .range([0, width]);
+                svg.append("g")
+                    .attr("transform", `translate(0, ${height})`)
+                    .call(d3.axisBottom(x));
+
+                // Add X Axis Label
+                svg.append("text")
+                    .attr("transform", "translate(" + (width / 2) + " ," + (height + margin.bottom) + ")")
+                    .style("text-anchor", "middle")
+                    .style("font-size", "10px")
+                    .text("Income");
+
+                // Add Y axis
+                const y = d3.scaleLinear()
+                    .domain([0, 28000])
+                    .range([height, 0]);
+                svg.append("g")
+                    .call(d3.axisLeft(y));
+
+                // Add Y Axis Label
+                svg.append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 0 - margin.left)
+                    .attr("x", 0 - (height / 2))
+                    .attr("dy", "1em")
+                    .style("text-anchor", "middle")
+                    .style("font-size", "11px")
+                    .text("Spend Per Pupil");
+
+
+
+                // Add tool tip
+                const tooltip = d3.select("#graph")
+                    .append("div")
+                    .style("opacity", 0)
+                    .attr("class", "tooltip")
+                    .style("background-color", "white")
+                    .style("border", "solid")
+                    .style("border-width", "1px")
+                    .style("border-radius", "5px")
+                    .style("padding", "10px")
+
+
+
+                // Tooltip controls
+                const mouseover = function (event, d) {
+                    tooltip
+                        .style("opacity", 1)
+                }
+
+                const mousemove = function (event, d) {
+                    tooltip
+                        .html(`${d.state} spends $${d.spend} per pupil and average income is: $${d.income}`)
+                        .style("left", (event.x) / 2 + "px")
+                        .style("top", (event.y) / 2 + "px")
+                }
+
+
+                const mouseleave = function (event, d) {
+                    tooltip
+                        .style("opacity", 0)
+                        .transition()
+                        .duration()
+                }
+
+                // Create the scatter variable: where both the circles and the brush take place
+                var scatter = svg.append('g')
+                    .attr("clip-path", "url(#clip)")
+
+                // Add circles
+                scatter
+                    .selectAll("circle")
+                    .data(data)
+                    .enter()
+                    .append("circle")
+                    .attr("cx", function (d) { return x(d.income); })
+                    .attr("cy", function (d) { return y(d.spend); })
+                    .attr("r", 8)
+                    .style("fill", "#61a3a9")
+                    .style("opacity", 0.5)
+                    .on("mouseover", mouseover)
+                    .on("mousemove", mousemove)
+                    .on("mouseleave", mouseleave);
+
+                // Set the zoom and Pan features: how much you can zoom, on which part, and what to do when there is a zoom
+                var zoom = d3.zoom()
+                    .scaleExtent([.5, 20])  // This control how much you can unzoom (x0.5) and zoom (x20)
+                    .extent([[0, 0], [width, height]])
+                    .on("zoom", updateChart);
+
+                // This add an invisible rect on top of the chart area. This rect can recover pointer events: necessary to understand when the user zoom
+                svg.append("rect")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .style("fill", "none")
+                    .style("pointer-events", "all")
+                    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+                    .call(zoom);
+                // now the user can zoom and it will trigger the function called updateChart
+
+                // A function that updates the chart when the user zoom and thus new boundaries are available
+                function updateChart() {
+
+                    // recover the new scale
+                    var newX = d3.event.transform.scale(x);
+                    var newY = d3.event.transform.scale(y);
+
+                    // update axes with these new boundaries
+                    xAxis.call(d3.axisBottom(newX))
+                    yAxis.call(d3.axisLeft(newY))
+
+                    // update circle position
+                    scatter
+                        .selectAll("circle")
+                        .attr('cx', function (d) { return newX(d.income) })
+                        .attr('cy', function (d) { return newY(d.spend) });
+                }
+
+            })
+        </script>
+    </div>
+</body>
